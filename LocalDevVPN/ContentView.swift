@@ -630,33 +630,36 @@ struct ContentView: View {
 
     var body: some View {
         NBNavigationStack {
-            VStack(spacing: 30) {
-                Spacer()
-
-                StatusIndicatorView()
-
-                ConnectionButton(
-                    action: {
-                        tunnelManager.tunnelStatus == .connected ? tunnelManager.stopVPN() : tunnelManager.startVPN()
+            ScrollView {
+                VStack(spacing: 0) {
+                    // Hero Section
+                    VStack(spacing: 16) {
+                        StatusIndicatorView()
+                            .padding(.top, 40)
+                        
+                        ConnectionButton(
+                            action: {
+#if targetEnvironment(simulator)
+                                tunnelManager.tunnelStatus = .connected
+#else
+                                tunnelManager.tunnelStatus == .connected ? tunnelManager.stopVPN() : tunnelManager.startVPN()
+#endif
+                            }
+                        )
+                        .padding(.bottom, 40)
                     }
-                )
-
-                Spacer()
-
-                if tunnelManager.tunnelStatus == .connected {
-                    ConnectionStatsView()
                 }
             }
-            .padding()
             .navigationTitle("LocalDevVPN")
-            .tvOSNavigationBarTitleDisplayMode(.inline)
+            .tvOSNavigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         showSettings = true
                     } label: {
-                        Image(systemName: "gear")
-                            .foregroundColor(.primary)
+                        Image(systemName: "gearshape.fill")
+                            .font(.system(size: 20, weight: .medium))
+                            .foregroundColor(.secondary)
                     }
                 }
             }
@@ -688,66 +691,92 @@ extension View {
 
 struct StatusIndicatorView: View {
     @StateObject private var tunnelManager = TunnelManager.shared
-    @State private var animationAmount = 1.0
     @State private var isAnimating = false
 
     var body: some View {
-        VStack(spacing: 20) {
+        VStack(spacing: 24) {
             ZStack {
                 Circle()
-                    .stroke(tunnelManager.tunnelStatus.color.opacity(0.2), lineWidth: 20)
-                    .frame(width: 200, height: 200)
-
+                    .stroke(
+                        LinearGradient(
+                            colors: [
+                                tunnelManager.tunnelStatus.color.opacity(0.3),
+                                tunnelManager.tunnelStatus.color.opacity(0.1)
+                            ],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        ),
+                        lineWidth: 2
+                    )
+                    .frame(width: 160, height: 160)
+                
                 Circle()
-                    .stroke(tunnelManager.tunnelStatus.color, lineWidth: 10)
-                    .frame(width: 200, height: 200)
-                    .scaleEffect(animationAmount)
-                    .opacity(2 - animationAmount)
-                    .animation(isAnimating ? Animation.easeOut(duration: 1.5).repeatForever(autoreverses: false) : .default, value: animationAmount)
-
-                VStack(spacing: 10) {
+                    .fill(
+                        LinearGradient(
+                            colors: [
+                                Color(UIColor.secondarySystemGroupedBackground),
+                                Color(UIColor.tertiarySystemGroupedBackground)
+                            ],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .frame(width: 140, height: 140)
+                    .shadow(color: Color.black.opacity(0.1), radius: 20, x: 0, y: 10)
+                
+                if #available(iOS 15.0, *) {
                     Image(systemName: tunnelManager.tunnelStatus.systemImage)
-                        .font(.system(size: 50))
+                        .font(.system(size: 48, weight: .medium))
+                        .foregroundStyle(
+                            LinearGradient(
+                                colors: [
+                                    tunnelManager.tunnelStatus.color,
+                                    tunnelManager.tunnelStatus.color.opacity(0.7)
+                                ],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+                        .scaleEffect(isAnimating && tunnelManager.tunnelStatus == .connected ? 1.05 : 1.0)
+                        .animation(
+                            tunnelManager.tunnelStatus == .connected ?
+                            Animation.easeInOut(duration: 1.5).repeatForever(autoreverses: true) : .default,
+                            value: isAnimating
+                        )
+                } else {
+                    Image(systemName: tunnelManager.tunnelStatus.systemImage)
+                        .font(.system(size: 48, weight: .medium))
                         .foregroundColor(tunnelManager.tunnelStatus.color)
-
-                    Text(tunnelManager.tunnelStatus.localizedTitle)
-                        .font(.headline)
-                        .foregroundColor(.primary)
+                        .scaleEffect(isAnimating && tunnelManager.tunnelStatus == .connected ? 1.05 : 1.0)
+                        .animation(
+                            tunnelManager.tunnelStatus == .connected ?
+                            Animation.easeInOut(duration: 1.5).repeatForever(autoreverses: true) : .default,
+                            value: isAnimating
+                        )
                 }
             }
             .onAppear {
-                updateAnimation()
-            }
-            .onChange(of: tunnelManager.tunnelStatus) { _ in
-                updateAnimation()
-            }
-            Text(tunnelManager.tunnelStatus == .connected ?
-                NSLocalizedString("local_tunnel_active", comment: "") :
-                NSLocalizedString("local_tunnel_inactive", comment: ""))
-                .font(.subheadline)
-                .foregroundColor(tunnelManager.tunnelStatus == .connected ? .green : .secondary)
-        }
-    }
-
-    private func updateAnimation() {
-        switch tunnelManager.tunnelStatus {
-        case .disconnecting:
-            isAnimating = false
-            withAnimation {
-                animationAmount = 1.0
-            }
-        case .disconnected:
-            isAnimating = false
-            animationAmount = 1.0
-        default:
-            isAnimating = true
-            animationAmount = 1.0
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                withAnimation {
-                    animationAmount = 2.0
+                if tunnelManager.tunnelStatus == .connected {
+                    isAnimating = true
                 }
             }
+            .onChange(of: tunnelManager.tunnelStatus) { status in
+                isAnimating = status == .connected
+            }
+            
+            VStack(spacing: 8) {
+                Text(tunnelManager.tunnelStatus.localizedTitle)
+                    .font(.system(size: 28, weight: .semibold, design: .rounded))
+                    .foregroundColor(.primary)
+                
+                Text(tunnelManager.tunnelStatus == .connected ?
+                    NSLocalizedString("local_tunnel_active", comment: "") :
+                    NSLocalizedString("local_tunnel_inactive", comment: ""))
+                    .font(.system(size: 15, weight: .regular))
+                    .foregroundColor(.secondary)
+            }
         }
+        .padding(.horizontal)
     }
 }
 
@@ -757,24 +786,43 @@ struct ConnectionButton: View {
 
     var body: some View {
         Button(action: action) {
-            HStack {
-                Text(buttonText)
-                    .font(.headline)
-                    .fontWeight(.semibold)
-
-                if tunnelManager.tunnelStatus == .connecting || tunnelManager.tunnelStatus == .disconnecting {
-                    ProgressView()
-                        .progressViewStyle(CircularProgressViewStyle())
-                        .padding(.leading, 5)
+            if #available(iOS 19.0, *) {
+                HStack(spacing: 8) {
+                    if tunnelManager.tunnelStatus == .connecting || tunnelManager.tunnelStatus == .disconnecting {
+                        ProgressView()
+                            .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                    }
+                    
+                    Text(buttonText)
+                        .font(.system(size: 17, weight: .semibold))
                 }
+                .frame(maxWidth: .infinity)
+                .frame(height: 56)
+                .glassEffect(.regular.interactive().tint(tunnelManager.tunnelStatus != .connected ? .red : .green), in:  RoundedRectangle(cornerRadius: 14, style: .continuous))
+                .foregroundColor(.white)
+                .shadow(color: tunnelManager.tunnelStatus.color.opacity(0.3), radius: 12, x: 0, y: 6)
+            } else {
+                HStack(spacing: 8) {
+                    if tunnelManager.tunnelStatus == .connecting || tunnelManager.tunnelStatus == .disconnecting {
+                        ProgressView()
+                            .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                    }
+                    
+                    Text(buttonText)
+                        .font(.system(size: 17, weight: .semibold))
+                }
+                .frame(maxWidth: .infinity)
+                .frame(height: 56)
+                .background(
+                    RoundedRectangle(cornerRadius: 14, style: .continuous)
+                        .fill(buttonBackground)
+                )
+                .foregroundColor(.white)
+                .shadow(color: tunnelManager.tunnelStatus.color.opacity(0.3), radius: 12, x: 0, y: 6)
             }
-            .frame(width: 200, height: 50)
-            .background(buttonBackground)
-            .foregroundColor(.white)
-            .clipShape(Capsule())
-            .shadow(color: Color.black.opacity(0.15), radius: 10, x: 0, y: 5)
         }
         .disabled(tunnelManager.tunnelStatus == .connecting || tunnelManager.tunnelStatus == .disconnecting)
+        .padding(.horizontal, 20)
     }
 
     private var buttonText: String {
@@ -790,104 +838,62 @@ struct ConnectionButton: View {
         }
     }
 
-    private var buttonBackground: some View {
-        Group {
-            if tunnelManager.tunnelStatus == .connected {
-                LinearGradient(
-                    gradient: Gradient(colors: [Color.red.opacity(0.8), Color.red]),
-                    startPoint: .leading,
-                    endPoint: .trailing
-                )
-            } else {
-                LinearGradient(
-                    gradient: Gradient(colors: [Color.blue.opacity(0.8), Color.blue]),
-                    startPoint: .leading,
-                    endPoint: .trailing
-                )
-            }
-        }
-    }
-}
-
-struct ConnectionStatsView: View {
-    @State private var time = 0
-    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-
-    var body: some View {
-        VStack(spacing: 25) {
-            Text("local_tunnel_details")
-                .font(.headline)
-                .foregroundColor(.primary)
-            HStack(spacing: 30) {
-                StatItemView(
-                    title: "time_connected",
-                    value: formattedTime,
-                    icon: "clock.fill"
-                )
-                StatItemView(
-                    title: "status",
-                    value: NSLocalizedString("active", comment: ""),
-                    icon: "checkmark.circle.fill"
-                )
-            }
-            HStack(spacing: 30) {
-                StatItemView(
-                    title: "network_interface",
-                    value: NSLocalizedString("local", comment: ""),
-                    icon: "network"
-                )
-                StatItemView(
-                    title: "assigned_ip",
-                    value: "10.7.0.1",
-                    icon: "number"
-                )
-            }
-        }
-        .padding()
-        .background(
-            RoundedRectangle(cornerRadius: 20)
-                .fill(Color(UIColor.darkGray))
-                .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 5)
-        )
-        .onReceive(timer) { _ in
-            time += 1
-        }
-    }
-
-    var formattedTime: String {
-        let minutes = (time / 60) % 60
-        let hours = time / 3600
-        let seconds = time % 60
-
-        if hours > 0 {
-            return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
+    private var buttonBackground: LinearGradient {
+        if tunnelManager.tunnelStatus == .connected {
+            return LinearGradient(
+                colors: [Color.red, Color.red.opacity(0.8)],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
         } else {
-            return String(format: "%02d:%02d", minutes, seconds)
+            return LinearGradient(
+                colors: [Color.blue, Color.blue.opacity(0.8)],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
         }
     }
 }
 
-struct StatItemView: View {
-    let title: LocalizedStringKey
-    let value: String
+struct InfoCard: View {
     let icon: String
-
+    let title: String
+    let subtitle: String
+    let accentColor: Color
+    
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HStack {
+        HStack(spacing: 16) {
+            ZStack {
+                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    .fill(accentColor.opacity(0.15))
+                    .frame(width: 48, height: 48)
+                
                 Image(systemName: icon)
-                    .foregroundColor(.blue)
-
-                Text(title)
-                    .font(.caption)
-                    .foregroundColor(.secondary)
+                    .font(.system(size: 22, weight: .medium))
+                    .foregroundColor(accentColor)
             }
-
-            Text(value)
-                .font(.system(size: 16, weight: .semibold))
-                .foregroundColor(.primary)
+            
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title)
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundColor(.primary)
+                
+                Text(subtitle)
+                    .font(.system(size: 13, weight: .regular))
+                    .foregroundColor(.secondary)
+                    .lineLimit(2)
+            }
+            
+            Spacer()
+            
+            Image(systemName: "chevron.right")
+                .font(.system(size: 14, weight: .semibold))
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(16)
+        .background(
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .fill(Color(UIColor.secondarySystemGroupedBackground))
+        )
     }
 }
 
@@ -1151,10 +1157,18 @@ struct HelpView: View {
                 }
             }
             Section(header: Text("app_info_header")) {
-                HStack {
-                    Image(systemName: "exclamationmark.shield")
-                    Text("requires_ios")
+                if let minVersion = Bundle.main.infoDictionary?["MinimumOSVersion"] as? String {
+                    let message = String(
+                        format: NSLocalizedString("requires_ios", comment: ""),
+                        minVersion
+                    )
+                    HStack {
+                        Image(systemName: "exclamationmark.shield")
+                        Text(message)
+                    }
                 }
+
+
                 HStack {
                     Image(systemName: "lock.shield")
                     Text("uses_network_extension")
