@@ -627,28 +627,33 @@ struct ContentView: View {
     @State var tunnel = false
     @AppStorage("autoConnect") private var autoConnect = false
     @AppStorage("hasNotCompletedSetup") private var hasNotCompletedSetup = true
+    @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
         NBNavigationStack {
-            VStack(spacing: 30) {
-                Spacer()
+            ScrollView(showsIndicators: false) {
+                VStack(spacing: 20) {
+                    StatusOverviewCard()
 
-                StatusIndicatorView()
+                    ConnectivityControlsCard(
+                        autoConnect: $autoConnect,
+                        action: {
+                            tunnelManager.tunnelStatus == .connected ? tunnelManager.stopVPN() : tunnelManager.startVPN()
+                        }
+                    )
 
-                ConnectionButton(
-                    action: {
-                        tunnelManager.tunnelStatus == .connected ? tunnelManager.stopVPN() : tunnelManager.startVPN()
+                    if tunnelManager.tunnelStatus == .connected {
+                        ConnectionStatsView()
                     }
-                )
-
-                Spacer()
-
-                if tunnelManager.tunnelStatus == .connected {
-                    ConnectionStatsView()
                 }
+                .padding(.horizontal)
+                .padding(.vertical, 24)
             }
-            .padding()
+            .background(backgroundColor.ignoresSafeArea())
             .navigationTitle("LocalDevVPN")
+            #if os(iOS)
+                .navigationBarTitleDisplayMode(.large)
+            #endif
             .tvOSNavigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
@@ -673,6 +678,14 @@ struct ContentView: View {
             }
         }
     }
+
+    private var backgroundColor: Color {
+        if colorScheme == .dark {
+            return Color(.systemBackground)
+        } else {
+            return Color(.systemGroupedBackground)
+        }
+    }
 }
 
 extension View {
@@ -686,67 +699,145 @@ extension View {
     }
 }
 
-struct StatusIndicatorView: View {
+struct StatusOverviewCard: View {
     @StateObject private var tunnelManager = TunnelManager.shared
-    @State private var animationAmount = 1.0
-    @State private var isAnimating = false
 
     var body: some View {
-        VStack(spacing: 20) {
-            ZStack {
-                Circle()
-                    .stroke(tunnelManager.tunnelStatus.color.opacity(0.2), lineWidth: 20)
-                    .frame(width: 200, height: 200)
+        DashboardCard {
+            VStack(alignment: .leading, spacing: 18) {
+                Text("Current status")
+                    .font(.headline)
 
-                Circle()
-                    .stroke(tunnelManager.tunnelStatus.color, lineWidth: 10)
-                    .frame(width: 200, height: 200)
-                    .scaleEffect(animationAmount)
-                    .opacity(2 - animationAmount)
-                    .animation(isAnimating ? Animation.easeOut(duration: 1.5).repeatForever(autoreverses: false) : .default, value: animationAmount)
-
-                VStack(spacing: 10) {
-                    Image(systemName: tunnelManager.tunnelStatus.systemImage)
-                        .font(.system(size: 50))
-                        .foregroundColor(tunnelManager.tunnelStatus.color)
+                HStack(spacing: 18) {
+                    StatusGlyphView()
 
                     Text(tunnelManager.tunnelStatus.localizedTitle)
-                        .font(.headline)
-                        .foregroundColor(.primary)
+                        .font(.title3)
+                        .fontWeight(.semibold)
+                        .multilineTextAlignment(.center)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                }
+
+                Divider()
+
+                HStack {
+                    Label {
+                        Text(statusTip)
+                    } icon: {
+                        Image(systemName: "info.circle")
+                    }
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+
+                    Spacer()
+
+                    Text(Date(), style: .time)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
                 }
             }
-            .onAppear {
-                updateAnimation()
-            }
-            .onChange(of: tunnelManager.tunnelStatus) { _ in
-                updateAnimation()
-            }
-            Text(tunnelManager.tunnelStatus == .connected ?
-                NSLocalizedString("local_tunnel_active", comment: "") :
-                NSLocalizedString("local_tunnel_inactive", comment: ""))
-                .font(.subheadline)
-                .foregroundColor(tunnelManager.tunnelStatus == .connected ? .green : .secondary)
         }
     }
 
-    private func updateAnimation() {
+    private var statusTip: String {
         switch tunnelManager.tunnelStatus {
+        case .connected:
+            return NSLocalizedString("Connected to 10.7.0.1", comment: "")
+        case .connecting:
+            return NSLocalizedString("macOS might ask you to approve the VPN", comment: "")
         case .disconnecting:
-            isAnimating = false
-            withAnimation {
-                animationAmount = 1.0
-            }
-        case .disconnected:
-            isAnimating = false
-            animationAmount = 1.0
+            return NSLocalizedString("Disconnecting safely", comment: "")
+        case .error:
+            return NSLocalizedString("Open Settings to review details", comment: "")
         default:
-            isAnimating = true
-            animationAmount = 1.0
+            return NSLocalizedString("Tap connect to create the tunnel", comment: "")
+        }
+    }
+}
+
+struct StatusGlyphView: View {
+    @StateObject private var tunnelManager = TunnelManager.shared
+    @State private var animate = false
+
+    var body: some View {
+        ZStack {
+            Circle()
+                .stroke(tunnelManager.tunnelStatus.color.opacity(0.25), lineWidth: 6)
+                .scaleEffect(animate ? 1.05 : 0.95)
+                .animation(.easeInOut(duration: 1.2).repeatForever(autoreverses: true), value: animate)
+
+            Circle()
+                .fill(tunnelManager.tunnelStatus.color.opacity(0.15))
+
+            Image(systemName: tunnelManager.tunnelStatus.systemImage)
+                .font(.title)
+                .foregroundColor(tunnelManager.tunnelStatus.color)
+        }
+        .frame(width: 92, height: 92)
+        .onAppear {
+            animate = true
+        }
+        .onChange(of: tunnelManager.tunnelStatus) { _ in
+            animate.toggle()
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                withAnimation {
-                    animationAmount = 2.0
-                }
+                animate = true
             }
+        }
+    }
+}
+
+struct ConnectivityControlsCard: View {
+    @Binding var autoConnect: Bool
+    let action: () -> Void
+
+    var body: some View {
+        DashboardCard {
+            VStack(alignment: .leading, spacing: 18) {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Connection")
+                        .font(.headline)
+                    Text("Start or stop the secure local tunnel.")
+                        .font(.footnote)
+                        .foregroundColor(.secondary)
+                }
+
+                ConnectionButton(action: action)
+
+                Toggle(isOn: $autoConnect) {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Auto-connect on launch")
+                            .fontWeight(.semibold)
+                        Text("Resume your last state automatically.")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
+                .toggleStyle(SwitchToggleStyle(tint: .accentColor))
+            }
+        }
+    }
+}
+
+struct ConnectionInfoRow: View {
+    let title: String
+    let value: String
+    let icon: String
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Image(systemName: icon)
+                .font(.body)
+                .foregroundColor(.accentColor)
+                .frame(width: 24)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                Text(value)
+                    .font(.body)
+                    .foregroundColor(.primary)
+            }
+            Spacer()
         }
     }
 }
@@ -754,6 +845,7 @@ struct StatusIndicatorView: View {
 struct ConnectionButton: View {
     @StateObject private var tunnelManager = TunnelManager.shared
     let action: () -> Void
+    @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
         Button(action: action) {
@@ -768,11 +860,12 @@ struct ConnectionButton: View {
                         .padding(.leading, 5)
                 }
             }
-            .frame(width: 200, height: 50)
+            .frame(maxWidth: .infinity)
+            .frame(height: 56)
             .background(buttonBackground)
             .foregroundColor(.white)
             .clipShape(Capsule())
-            .shadow(color: Color.black.opacity(0.15), radius: 10, x: 0, y: 5)
+            .shadow(color: shadowColor, radius: 10, x: 0, y: 5)
         }
         .disabled(tunnelManager.tunnelStatus == .connecting || tunnelManager.tunnelStatus == .disconnecting)
     }
@@ -807,48 +900,69 @@ struct ConnectionButton: View {
             }
         }
     }
+
+    private var shadowColor: Color {
+        colorScheme == .dark ? Color.black.opacity(0.5) : Color.black.opacity(0.15)
+    }
 }
 
 struct ConnectionStatsView: View {
+    @StateObject private var tunnelManager = TunnelManager.shared
     @State private var time = 0
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    @AppStorage("TunnelDeviceIP") private var deviceIP = "10.7.0.0"
+    @AppStorage("TunnelFakeIP") private var fakeIP = "10.7.0.1"
+    @AppStorage("TunnelSubnetMask") private var subnetMask = "255.255.255.0"
 
     var body: some View {
-        VStack(spacing: 25) {
-            Text("local_tunnel_details")
-                .font(.headline)
-                .foregroundColor(.primary)
-            HStack(spacing: 30) {
-                StatItemView(
-                    title: "time_connected",
-                    value: formattedTime,
-                    icon: "clock.fill"
+        DashboardCard {
+            VStack(alignment: .leading, spacing: 18) {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Session details")
+                        .font(.headline)
+                    Text("Live stats while the tunnel is connected.")
+                        .font(.footnote)
+                        .foregroundColor(.secondary)
+                }
+
+                HStack(spacing: 16) {
+                    StatItemView(
+                        title: "time_connected",
+                        value: formattedTime,
+                        icon: "clock.fill"
+                    )
+                    StatItemView(
+                        title: "status",
+                        value: statusValue,
+                        icon: tunnelManager.tunnelStatus.systemImage
+                    )
+                }
+
+                Divider()
+
+                Text("Network configuration")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+
+                ConnectionInfoRow(
+                    title: "Local device IP",
+                    value: deviceIP,
+                    icon: "desktopcomputer"
                 )
-                StatItemView(
-                    title: "status",
-                    value: NSLocalizedString("active", comment: ""),
-                    icon: "checkmark.circle.fill"
+
+                ConnectionInfoRow(
+                    title: "Tunnel IP",
+                    value: fakeIP,
+                    icon: "point.3.filled.connected.trianglepath.dotted"
                 )
-            }
-            HStack(spacing: 30) {
-                StatItemView(
-                    title: "network_interface",
-                    value: NSLocalizedString("local", comment: ""),
+
+                ConnectionInfoRow(
+                    title: "Subnet mask",
+                    value: subnetMask,
                     icon: "network"
-                )
-                StatItemView(
-                    title: "assigned_ip",
-                    value: "10.7.0.1",
-                    icon: "number"
                 )
             }
         }
-        .padding()
-        .background(
-            RoundedRectangle(cornerRadius: 20)
-                .fill(Color(UIColor.darkGray))
-                .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 5)
-        )
         .onReceive(timer) { _ in
             time += 1
         }
@@ -865,6 +979,20 @@ struct ConnectionStatsView: View {
             return String(format: "%02d:%02d", minutes, seconds)
         }
     }
+    private var statusValue: String {
+        switch tunnelManager.tunnelStatus {
+        case .connected:
+            return NSLocalizedString("Active", comment: "")
+        case .connecting:
+            return NSLocalizedString("Connecting", comment: "")
+        case .disconnecting:
+            return NSLocalizedString("Disconnecting", comment: "")
+        case .error:
+            return NSLocalizedString("Error", comment: "")
+        default:
+            return NSLocalizedString("Idle", comment: "")
+        }
+    }
 }
 
 struct StatItemView: View {
@@ -873,21 +1001,53 @@ struct StatItemView: View {
     let icon: String
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HStack {
+        VStack(alignment: .leading, spacing: 6) {
+            HStack(spacing: 6) {
                 Image(systemName: icon)
-                    .foregroundColor(.blue)
-
+                    .foregroundColor(.accentColor)
+                    .font(.caption)
                 Text(title)
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
 
             Text(value)
-                .font(.system(size: 16, weight: .semibold))
+                .font(.headline)
                 .foregroundColor(.primary)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+    }
+}
+
+struct DashboardCard<Content: View>: View {
+    private let content: () -> Content
+    @Environment(\.colorScheme) private var colorScheme
+
+    init(@ViewBuilder content: @escaping () -> Content) {
+        self.content = content
+    }
+
+    var body: some View {
+        content()
+            .padding()
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(
+                RoundedRectangle(cornerRadius: 22, style: .continuous)
+                    .fill(Color(.secondarySystemBackground))
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 22, style: .continuous)
+                    .stroke(borderColor)
+            )
+            .shadow(color: shadowColor, radius: 12, x: 0, y: 6)
+    }
+
+    private var borderColor: Color {
+        colorScheme == .dark ? Color.white.opacity(0.08) : Color.black.opacity(0.06)
+    }
+
+    private var shadowColor: Color {
+        colorScheme == .dark ? Color.black.opacity(0.5) : Color.black.opacity(0.12)
     }
 }
 
