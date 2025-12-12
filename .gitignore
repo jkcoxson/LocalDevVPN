@@ -3,3 +3,4 @@ CodeSigning.xcconfig
 /build
 
 **/.DS_Store
+/LocalDevVPN.xcodeproj/project.xcworkspace/xcuserdata/dan.xcuserdatad/UserInterfaceState.xcuserstate
