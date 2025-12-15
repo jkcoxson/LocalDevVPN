@@ -12,7 +12,7 @@
 "local_tunnel_inactive" = "Lokalny tunel nieaktywny";
 
 "connected_to_ip" = "Połączono z %@";
-"connected_at" = "Connected at";
+"connected_at" = "Połączono z ";
 "ios_might_ask_you_to_allow_the_vpn" = "iOS może poprosić Cię o pozwolenie na VPN";
 "disconnecting_safely" = "Bezpieczne rozłączanie…";
 "open_settings_to_review_details" = "Otwórz Ustawienia, aby zobaczyć szczegóły";

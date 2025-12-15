@@ -12,7 +12,7 @@
 "local_tunnel_inactive" = "로컬 터널 비활성화됨";
 
 "connected_to_ip" = "%@에 연결됨";
-"connected_at" = "Connected at";
+"connected_at" = "연결 시간 ";
 "ios_might_ask_you_to_allow_the_vpn" = "iOS에서 VPN 허용 요청이 나타날 수 있습니다";
 "disconnecting_safely" = "안전하게 연결 해제 중…";
 "open_settings_to_review_details" = "자세한 내용을 보려면 설정을 여세요";
