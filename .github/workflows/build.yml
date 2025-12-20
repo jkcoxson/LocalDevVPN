@@ -22,10 +22,10 @@ jobs:
             - name: Build Xcode Archive
               run: |
                   xcodebuild archive \
-                    -project StosVPN.xcodeproj \
-                    -scheme StosVPN \
+                    -project LocalDevVPN.xcodeproj \
+                    -scheme LocalDevVPN \
                     -destination 'generic/platform=iOS' \
-                    -archivePath build/StosVPN.xcarchive \
+                    -archivePath build/LocalDevVPN.xcarchive \
                     CODE_SIGN_IDENTITY="" \
                     CODE_SIGNING_REQUIRED=NO \
                     CODE_SIGNING_ALLOWED=NO
@@ -34,11 +34,11 @@ jobs:
               run: mkdir -p Payload
 
             - name: Copy App to Payload
-              run: cp -R build/StosVPN.xcarchive/Products/Applications/StosVPN.app Payload/StosVPN.app
+              run: cp -R build/LocalDevVPN.xcarchive/Products/Applications/LocalDevVPN.app Payload/LocalDevVPN.app
 
             - name: Find and Sign App Extension
               run: |
-                  APPEX_PATH=$(find Payload/StosVPN.app/PlugIns -name "*.appex" | head -n 1)
+                  APPEX_PATH=$(find Payload/LocalDevVPN.app/PlugIns -name "*.appex" | head -n 1)
                   if [ -z "$APPEX_PATH" ]; then
                     echo "Error: App Extension (.appex) not found in PlugIns directory."
                     exit 1
@@ -50,17 +50,17 @@ jobs:
 
             - name: Sign Main App Bundle
               run: |
-                  APP_BINARY_PATH="Payload/StosVPN.app/StosVPN"
+                  APP_BINARY_PATH="Payload/LocalDevVPN.app/LocalDevVPN"
                   # Use the specific entitlements for the main app
-                  ldid -S"${GITHUB_WORKSPACE}/StosVPN/StosVPN.entitlements" "$APP_BINARY_PATH"
+                  ldid -S"${GITHUB_WORKSPACE}/LocalDevVPN/LocalDevVPN.entitlements" "$APP_BINARY_PATH"
                   echo "Signed Main App Bundle."
 
             - name: Create IPA
               run: |
-                  zip -r ./StosVPN-fakesigned.ipa Payload
+                  zip -r ./LocalDevVPN-fakesigned.ipa Payload
 
             - name: Upload IPA Artifact
               uses: actions/upload-artifact@v4
               with:
-                  name: StosVPN-IPA.ipa
-                  path: StosVPN-fakesigned.ipa
+                  name: LocalDevVPN-IPA.ipa
+                  path: LocalDevVPN-fakesigned.ipa
