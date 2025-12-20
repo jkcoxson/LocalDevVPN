@@ -16,8 +16,8 @@ jobs:
             - name: Install ldid
               run: brew install ldid
 
-            - name: Select Xcode version
-              run: sudo xcode-select -s /Applications/Xcode_16.2.app
+            - name: Select Latest Xcode
+              run: sudo xcode-select -switch /Applications/Xcode.app
 
             - name: Build Xcode Archive
               run: |
