@@ -48,6 +48,8 @@
 "italian"                  = "이탈리아어";
 "polish"                   = "폴란드어";
 "korean"                   = "한국어";
+"TChinese" = "중국어(번체)"
+"french" = "프랑스어";
 
 /* MARK: Settings */
 

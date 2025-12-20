@@ -48,6 +48,8 @@
 "italian"                  = "Italian";
 "polish"                   = "Polish";
 "korean"                   = "Korean";
+"TChinese" = "Traditional Chinese"
+"french" = "French";
 
 /* MARK: Settings */
 
