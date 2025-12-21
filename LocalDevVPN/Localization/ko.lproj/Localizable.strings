@@ -147,7 +147,7 @@
 
 
 /*MARK: Restart pop-up*/
-restart_title = "재시작";
-restart_message = "변경사항을 적용할려면 앱을 재시작해야 합니다.";
-confirmYes = "네";
-confirmNo = "아니요";
+"restart_title" = "재시작";
+"restart_message" = "변경사항을 적용할려면 앱을 재시작해야 합니다.";
+"confirmYes" = "네";
+"confirmNo" = "아니요";

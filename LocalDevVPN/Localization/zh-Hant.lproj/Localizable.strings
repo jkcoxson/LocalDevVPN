@@ -147,7 +147,7 @@
 "setup_skip" = "略過";
 
 /*MARK: Restart pop-up*/
-restart_title = "重新啟動";
-restart_message = "要套用變更，必須重新啟動應用程式。";
-confirmYes = "是";
-confirmNo = "不";
+"restart_title" = "重新啟動";
+"restart_message" = "要套用變更，必須重新啟動應用程式。";
+"confirmYes" = "是";
+"confirmNo" = "不";

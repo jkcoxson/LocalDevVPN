@@ -147,7 +147,7 @@
 "setup_skip" = "Pomiń";
 
 /*MARK: Restart pop-up*/
-restart_title = "Restartuj";
-restart_message = "Aby zastosować zmiany, należy ponownie uruchomić aplikację.";
-confirmYes = "Tak";
-confirmNo = "Nie";
+"restart_title" = "Restartuj";
+"restart_message" = "Aby zastosować zmiany, należy ponownie uruchomić aplikację.";
+"confirmYes" = "Tak";
+"confirmNo" = "Nie";

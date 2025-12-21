@@ -146,7 +146,7 @@
 "setup_skip" = "Skip";
 
 /*MARK: Restart pop-up*/
-restart_title = "Restart";
-restart_message = "To apply the changes, you need to restart the application.";
-confirmYes = "Yes";
-confirmNo = "No";
+"restart_title" = "Restart";
+"restart_message" = "To apply the changes, you need to restart the application.";
+"confirmYes" = "Yes";
+"confirmNo" = "No";
