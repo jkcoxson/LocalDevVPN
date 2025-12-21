@@ -145,3 +145,9 @@
 "setup_get_started" = "Commencer";
 "setup_next" = "Suivant";
 "setup_skip" = "Ignorer";
+
+/*MARK: Restart pop-up*/
+"restart_title" = "Redémarrer";
+"restart_message" = "Pour appliquer les modifications, vous devez redémarrer l'application.";
+"confirmYes" = "Oui";
+"confirmNo" = "Non";
