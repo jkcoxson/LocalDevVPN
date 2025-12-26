@@ -12,7 +12,8 @@
 "local_tunnel_inactive" = "本地通道未啟動";
 
 "connected_to_ip" = "已連接至 %@";
-"connected_at" = "連接於";
+"connected_at" = "相關：";
+"last_connected_at" = "最後一次連線：";
 "ios_might_ask_you_to_allow_the_vpn" = "iOS可能會要求您允許VPN";
 "disconnecting_safely" = "安全地中斷連線中…";
 "open_settings_to_review_details" = "開啟設定以查看詳細資訊";
