@@ -3,7 +3,7 @@
 "current_status" = "Current status";
 
 "disconnected" = "Disconnected";
-"disconnectedCaption" = "Disconnected from Tunnel.";
+"disconnectedCaption" = "Disconnected from the Tunnel.";
 "connecting" = "Connecting";
 "connectingCaption" = "Connecting to %@...";
 "connected" = "Connected";

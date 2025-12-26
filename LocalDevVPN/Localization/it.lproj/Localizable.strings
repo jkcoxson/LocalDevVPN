@@ -3,10 +3,15 @@
 "current_status" = "Stato attuale";
 
 "disconnected" = "Disconnesso";
+"disconnectedCaption" = "Disconnesso dal Tunnel.";
 "connecting" = "Connessione in corso";
+"connectingCaption" = "Connessione a %@...";
 "connected" = "Connesso";
+"connectedCaption" = "Connesso a %@.";
 "disconnecting" = "Disconnessione in corso";
+"disconnectingCaption" = "Disconnessione da %@...";
 "error" = "Errore";
+"errorCaption" = "Si è verificato un errore sconosciuto.";
 
 "local_tunnel_active" = "Tunnel locale attivo";
 "local_tunnel_inactive" = "Tunnel locale inattivo";
@@ -128,7 +133,7 @@
 "app_info_header" = "Informazioni App";
 "requires_ios" = "Richiede iOS 14.0 o superiore";
 "uses_network_extension" = "Usa le Network Extension API di Apple";
-"help_and_support_nav" = "Guida e Supporto";
+"help_and_support_nav" = "Guida & Supporto";
 "setup_welcome_title" = "Benvenuto in LocalDevVPN";
 "setup_welcome_description" = "Un semplice tunnel di rete locale per sviluppatori";
 "setup_welcome_details" = "LocalDevVPN crea un'interfaccia di rete locale per sviluppo, test e accesso a server locali. Questa app NON raccoglie dati utente né instrada il traffico attraverso server esterni.";

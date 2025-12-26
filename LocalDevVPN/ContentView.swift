@@ -799,7 +799,7 @@ struct StatusOverviewCard: View {
                         .frame(maxWidth: .infinity, alignment: .center)
                     
                     Text(localizedCaption)
-                        .font(.caption2)
+                        .font(.caption)
                         .fontWeight(.regular)
                         .multilineTextAlignment(.center)
                         .frame(maxWidth: .infinity, alignment: .center)
@@ -1019,7 +1019,7 @@ struct ConnectionStatsView: View {
             VStack(alignment: .leading, spacing: 12) {
                 VStack(alignment: .leading, spacing: 3) {
                     HStack(spacing: 6) {
-                        Image(systemName: "iphone.crop.circle")
+                        Image(systemName: "wifi.badge.lock")
                         Text("session_details")
                             .font(.headline)
                     }
@@ -1150,6 +1150,7 @@ struct SettingsView: View {
                 Section(header: Text("language")) {
                     HStack{
                         Image(systemName: "globe")
+                            .foregroundColor(.blue)
                         Picker("dropdown_language", selection: $selectedLanguage) {
                             Text("english").tag("en")
                             Text("spanish").tag("es")
@@ -1313,14 +1314,19 @@ struct HelpView: View {
                     VStack(alignment: .leading, spacing: 15) {
                         if #available(iOS 18.0, *) {
                             Image(systemName: startImageTransition ? "network.badge.shield.half.filled" : "network")
+                                .resizable()
+                                .scaledToFit()
                                 .font(.system(size: 80))
                                 .foregroundColor(.blue)
+                                .frame(width: 100, height: 100)
                                 .frame(maxWidth: .infinity, maxHeight: 200, alignment: .center)
                                 .contentTransition(.symbolEffect(.replace.magic(fallback: .offUp.wholeSymbol), options: .nonRepeating))
                                 .onAppear{
                                     Task{
                                         try? await Task.sleep(for: .seconds(1))
-                                        startImageTransition = true
+                                        withAnimation{
+                                            startImageTransition = true
+                                        }
                                     }
                                 }
                                 .onDisappear{
@@ -1348,8 +1354,11 @@ struct HelpView: View {
                     VStack(alignment: .leading, spacing: 15) {
                         if #available(iOS 18.0, *) {
                             Image(systemName: startImageTransition ? "antenna.radiowaves.left.and.right.slash" : "antenna.radiowaves.left.and.right")
+                                .resizable()
+                                .scaledToFit()
                                 .font(.system(size: 80))
                                 .foregroundColor(.blue)
+                                .frame(width: 100, height: 100)
                                 .frame(maxWidth: .infinity, maxHeight: 200, alignment: .center)
                                 .contentTransition(.symbolEffect(.replace.magic(fallback: .offUp.wholeSymbol), options: .nonRepeating))
                                 .onAppear{
@@ -1491,14 +1500,10 @@ struct HelpView: View {
                 }
             }
             Section(header: Text("app_info_header")) {
-                HStack {
-                    Image(systemName: "exclamationmark.shield")
-                    Text("requires_ios")
-                }
-                HStack {
-                    Image(systemName: "lock.shield")
-                    Text("uses_network_extension")
-                }
+                Label("requires_ios", systemImage: "exclamationmark.shield")
+                    .foregroundColor(.black)
+                Label("uses_network_extension", systemImage: "lock.shield")
+                    .foregroundColor(.black)
             }
         }
         .navigationTitle(Text("help_and_support_nav"))
@@ -1514,25 +1519,29 @@ struct SetupView: View {
         SetupPage(
             title: "setup_welcome_title",
             description: "setup_welcome_description",
-            imageName: "checkmark.shield.fill",
+            transitionImage: "shield.fill",
+            standardImage: "checkmark.shield.fill",
             details: "setup_welcome_details"
         ),
         SetupPage(
             title: "setup_why_title",
             description: "setup_why_description",
-            imageName: "person.2.fill",
+            transitionImage: "person.2.shield",
+            standardImage: "person.2.fill",
             details: "setup_why_details"
         ),
         SetupPage(
             title: "setup_easy_title",
             description: "setup_easy_description",
-            imageName: "hand.tap.fill",
+            transitionImage: "hand.tap.fill",
+            standardImage: "hand.tap.fill",
             details: "setup_easy_details"
         ),
         SetupPage(
             title: "setup_privacy_title",
             description: "setup_privacy_description",
-            imageName: "lock.shield.fill",
+            transitionImage: "lock.open.fill",
+            standardImage: "lock.fill",
             details: "setup_privacy_details"
         ),
     ]
@@ -1598,19 +1607,41 @@ struct SetupView: View {
 struct SetupPage {
     let title: LocalizedStringKey
     let description: LocalizedStringKey
-    let imageName: String
+    let transitionImage: String
+    let standardImage : String
     let details: LocalizedStringKey
 }
 
 struct SetupPageView: View {
+    @State var startImageTransition : Bool = false
     let page: SetupPage
 
     var body: some View {
         VStack(spacing: tvOSSpacing) {
-            Image(systemName: page.imageName)
-                .font(.system(size: tvOSImageSize))
-                .foregroundColor(.blue)
-                .padding(.top, tvOSTopPadding)
+            if #available(iOS 18.0, *){
+                Image(systemName: (startImageTransition) ? page.standardImage : page.transitionImage)
+                    .font(.system(size: tvOSImageSize))
+                    .foregroundColor(.blue)
+                    .padding(.top, tvOSTopPadding)
+                    .contentTransition(.symbolEffect(.replace))
+                    .onAppear{
+                        Task{
+                            try? await Task.sleep(for: .seconds(1))
+                            withAnimation{
+                                startImageTransition = true
+                            }
+                        }
+                    }
+                    .onDisappear{
+                        startImageTransition = false
+                    }
+            }
+            else{
+                Image(systemName: page.standardImage)
+                    .font(.system(size: tvOSImageSize))
+                    .foregroundColor(.blue)
+                    .padding(.top, tvOSTopPadding)
+            }
 
             Text(page.title)
                 .font(tvOSTitleFont)
