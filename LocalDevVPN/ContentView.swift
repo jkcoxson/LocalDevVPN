@@ -1137,7 +1137,7 @@ struct SettingsView: View {
         NBNavigationStack {
             List {
                 Section(header: Text("connection_settings")) {
-                    Toggle("auto_connect_on_launch", isOn: $autoConnect)
+                    Toggle("auto_connect_on_launch", systemImage: "bolt.horizontal.fill", isOn: $autoConnect)
                     NavigationLink(destination: ConnectionLogView()) {
                         Label("connection_logs", systemImage: "doc.text")
                     }
@@ -1145,9 +1145,9 @@ struct SettingsView: View {
 
                 Section(header: Text("network_configuration")) {
                     Group {
-                        networkConfigRow(label: "tunnel_ip", text: $deviceIP)
-                        networkConfigRow(label: "device_ip", text: $fakeIP)
-                        networkConfigRow(label: "subnet_mask", text: $subnetMask)
+                        networkConfigRow(label: "tunnel_ip", text: $deviceIP, image: "point.3.filled.connected.trianglepath.dotted")
+                        networkConfigRow(label: "device_ip", text: $fakeIP, image: "desktopcomputer")
+                        networkConfigRow(label: "subnet_mask", text: $subnetMask, image: "network")
                     }
                 }
                 
@@ -1181,11 +1181,11 @@ struct SettingsView: View {
                     }
                     
                     if #available(iOS 18.0, *){
-                        Toggle("enable_animation", isOn: $enableAnimations)
+                        Toggle("enable_animation", systemImage: "circle.dotted.and.circle", isOn: $enableAnimations)
                     }
                     else{
                         VStack{
-                            Toggle("enable_animation", isOn: $enableAnimations)
+                            Toggle("enable_animation", systemImage: "circle.dotted.and.circle", isOn: $enableAnimations)
                                 .disabled(true)
                             Text("not_supported")
                                 .font(.footnote)
@@ -1243,9 +1243,9 @@ struct SettingsView: View {
         presentationMode.wrappedValue.dismiss()
     }
 
-    private func networkConfigRow(label: LocalizedStringKey, text: Binding<String>) -> some View {
+    private func networkConfigRow(label: LocalizedStringKey, text: Binding<String>, image: String) -> some View {
         HStack {
-            Text(label)
+            Label(label, systemImage: image)
             Spacer()
             TextField(label, text: text)
                 .multilineTextAlignment(.trailing)
