@@ -17,7 +17,6 @@ extension Bundle {
 }
 
 // MARK: - Logging Utility
-
 class VPNLogger: ObservableObject {
     @Published var logs: [String] = []
 
@@ -814,8 +813,14 @@ struct StatusOverviewCard: View {
                     Spacer()
 
                     HStack(spacing: 4) {
-                        Text("connected_at")
-                        Text(Date(), style: .time)
+                        if TunnelManager.shared.tunnelStatus == .connected {
+                            Text("connected_at")
+                            Text(Date(), style: .time)
+                        }
+                        else {
+                            Text("last_connected_at")
+                            Text(Date(), style: .time)
+                        }
                     }
                     .font(.caption)
                     .foregroundColor(.secondary)
@@ -1112,27 +1117,7 @@ struct SettingsView: View {
                         networkConfigRow(label: "subnet_mask", text: $subnetMask)
                     }
                 }
-
-                Section(header: Text("app_information")) {
-                    Button {
-                        UIApplication.shared.open(URL(string: "https://jkcoxson.com/cdn/LocalDevVPN/LocalDevVPNPrivacyPolicy.md")!, options: [:])
-                    } label: {
-                        Label("privacy_policy", systemImage: "lock.shield")
-                    }
-                    NavigationLink(destination: DataCollectionInfoView()) {
-                        Label("data_collection_policy", systemImage: "hand.raised.slash")
-                    }
-                    HStack {
-                        Text("app_version")
-                        Spacer()
-                        Text(Bundle.main.shortVersion)
-                            .foregroundColor(.secondary)
-                    }
-                    NavigationLink(destination: HelpView()) {
-                        Text("help_and_support")
-                    }
-                }
-
+                
                 Section(header: Text("language")) {
                     Picker("dropdown_language", selection: $selectedLanguage) {
                         Text("english").tag("en")
@@ -1156,6 +1141,26 @@ struct SettingsView: View {
                                 showRestartPopUp = true
                             }
                         )
+                    }
+                }
+
+                Section(header: Text("app_information")) {
+                    Button {
+                        UIApplication.shared.open(URL(string: "https://jkcoxson.com/cdn/LocalDevVPN/LocalDevVPNPrivacyPolicy.md")!, options: [:])
+                    } label: {
+                        Label("privacy_policy", systemImage: "lock.shield")
+                    }
+                    NavigationLink(destination: DataCollectionInfoView()) {
+                        Label("data_collection_policy", systemImage: "hand.raised.slash")
+                    }
+                    HStack {
+                        Text("app_version")
+                        Spacer()
+                        Text(Bundle.main.shortVersion)
+                            .foregroundColor(.secondary)
+                    }
+                    NavigationLink(destination: HelpView()) {
+                        Text("help_and_support")
                     }
                 }
             }

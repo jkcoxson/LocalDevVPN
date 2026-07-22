@@ -12,7 +12,8 @@
 "local_tunnel_inactive" = "Local Tunnel Inactive";
 
 "connected_to_ip" = "Connected to %@";
-"connected_at" = "Connected at";
+"connected_at" = "Connected: ";
+"last_connected_at" = "Last connection: ";
 "ios_might_ask_you_to_allow_the_vpn" = "iOS might ask you to allow the VPN";
 "disconnecting_safely" = "Disconnecting safely…";
 "open_settings_to_review_details" = "Open Settings to review details";
