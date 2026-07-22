@@ -3,16 +3,22 @@
 "current_status" = "Current status";
 
 "disconnected" = "Disconnected";
+"disconnectedCaption" = "Disconnected from the Tunnel.";
 "connecting" = "Connecting";
+"connectingCaption" = "Connecting to %@...";
 "connected" = "Connected";
+"connectedCaption" = "Connected to %@.";
 "disconnecting" = "Disconnecting";
+"disconnectingCaption" = "Disconnecting from %@...";
 "error" = "Error";
+"errorCaption" = "An unknown error occurred.";
 
 "local_tunnel_active" = "Local Tunnel Active";
 "local_tunnel_inactive" = "Local Tunnel Inactive";
 
 "connected_to_ip" = "Connected to %@";
-"connected_at" = "Connected at";
+"connected_at" = "Connected: ";
+"last_connected_at" = "Last connection: ";
 "ios_might_ask_you_to_allow_the_vpn" = "iOS might ask you to allow the VPN";
 "disconnecting_safely" = "Disconnecting safely…";
 "open_settings_to_review_details" = "Open Settings to review details";
@@ -65,7 +71,7 @@
 "data_collection_policy" = "Data Collection Policy";
 "app_version" = "App Version";
 "help_and_support" = "Help and Support";
-"language" = "Set Language";
+"language" = "Graphic Settings";
 "dropdown_language" = "Language";
 "settings" = "Settings";
 "done" = "Done";
@@ -144,6 +150,8 @@
 "setup_get_started" = "Get Started";
 "setup_next" = "Next";
 "setup_skip" = "Skip";
+"enable_animation" = "Enable Icon Animations";
+"not_supported" = "\nNot supported for your version of iOS (18.0 or later).";
 
 /*MARK: Restart pop-up*/
 "restart_title" = "Restart";
