@@ -50,6 +50,7 @@
 "korean"                   = "한국어";
 "TChinese" = "중국어(번체)";
 "french" = "프랑스어";
+"japanese" = "일본어";
 
 /* MARK: Settings */
 
