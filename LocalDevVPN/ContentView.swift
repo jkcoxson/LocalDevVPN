@@ -1320,6 +1320,8 @@ struct SettingsView: View {
                         Text("korean").tag("ko")
                         Text("TChinese").tag("zh-Hant")
                         Text("french").tag("fr")
+                        Text("japanese").tag("ja")
+
                     }
                     .onChange(of: selectedLanguage) { newValue in
                         let languageCode = newValue
