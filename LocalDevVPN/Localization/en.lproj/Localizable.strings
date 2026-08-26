@@ -50,6 +50,8 @@
 "korean"                   = "Korean";
 "TChinese" = "Traditional Chinese";
 "french" = "French";
+"japanese" = "Japanese";
+
 
 /* MARK: Settings */
 
