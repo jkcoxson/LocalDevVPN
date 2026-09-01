@@ -51,6 +51,8 @@
 "device_ip" = "デバイス IP";
 "tunnel_ip" = "トンネル IP";
 "subnet_mask" = "サブネットマスク";
+"allow_intermediate_addresses" = "中間アドレスを許可";
+"allow_intermediate_addresses_desc" = "中間アドレスを許可すると、CIDRのベースではないアドレス（例：11.7.0.2/30）も受け付けられ、そのネットワークベースルート（11.7.0.0/30）に正規化されます。";
 "app_information" = "アプリ情報";
 "privacy_policy" = "プライバシーポリシー";
 "data_collection_policy" = "データ収集ポリシー";
