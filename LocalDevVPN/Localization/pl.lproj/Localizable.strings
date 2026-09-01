@@ -60,6 +60,8 @@
 "network_configuration" = "Konfiguracja sieci";
 "device_ip" = "IP urządzenia";
 "tunnel_ip" = "IP tunelu";
+"allow_intermediate_addresses" = "Zezwalaj na adresy pośrednie";
+"allow_intermediate_addresses_desc" = "Po włączeniu tej opcji adresy CIDR niebędące adresami bazowymi (np. 11.7.0.2/30) są akceptowane i normalizowane do adresu bazowego sieci (11.7.0.0/30).";
 "subnet_mask" = "Maska podsieci";
 "app_information" = "Informacje o aplikacji";
 "privacy_policy" = "Polityka prywatności";
