@@ -73,6 +73,7 @@
 "dropdown_language" = "Language";
 "settings" = "Settings";
 "done" = "Done";
+"cancel" = "Cancel";
 "warning_alert" = "Warning";
 "warning_message" = "Changing tunnel IP settings can disrupt your network connection. Proceed only if you are sure of what you are doing.";
 "understand_button" = "I Understand";
