@@ -42,8 +42,18 @@
 "local" = "ローカル";
 "assigned_ip" = "割り当てられた IP";
 
-/* MARK: Settings */
+/*MARK: Locales*/
+"english" = "英語";
+"spanish" = "スペイン語";
+"italian" = "イタリア語";
+"polish" = "ポーランド語";
+"korean" = "韓国語";
+"TChinese" = "繁体字中国語";
+"french" = "フランス語";
+"japanese" = "日本語";
 
+
+/* MARK: Settings */
 "connection_settings" = "接続設定";
 "auto_connect_on_launch" = "起動時に自動接続";
 "connection_logs" = "接続ログ";
@@ -60,23 +70,11 @@
 "help_and_support" = "ヘルプとサポート";
 "language" = "言語";
 "dropdown_language" = "言語";
-
-/*MARK: Locales*/
-"english" = "英語";
-"spanish" = "スペイン語";
-"italian" = "イタリア語";
-"polish" = "ポーランド語";
-"korean" = "韓国語";
-"TChinese" = "繁体字中国語";
-"french" = "フランス語";
-"japanese" = "日本語";
-
 "settings" = "設定";
 "done" = "完了";
 "warning_alert" = "警告";
 "warning_message" = "トンネル IP の設定を変更すると、ネットワーク接続が切断される場合があります。内容を十分理解したうえで操作してください。";
 "understand_button" = "理解しました";
-
 "data_collection_policy_title" = "データ収集ポリシー";
 "no_data_collection" = "データを収集しません";
 "no_data_collection_description" = "LocalDevVPN は、ユーザーデータ、通信情報、閲覧履歴を一切収集しません。このアプリはデバイス上にローカルなネットワークトンネルを作成するだけです。";
