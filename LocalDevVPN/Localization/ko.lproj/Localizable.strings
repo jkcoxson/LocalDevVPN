@@ -52,6 +52,7 @@
 "french" = "프랑스어";
 "japanese" = "일본어";
 
+
 /* MARK: Settings */
 
 "connection_settings" = "연결 설정";
@@ -61,6 +62,8 @@
 "device_ip" = "기기 IP";
 "tunnel_ip" = "터널 IP";
 "subnet_mask" = "서브넷 마스크";
+"allow_intermediate_addresses" = "중간 주소 허용";
+"allow_intermediate_addresses_desc" = "중간 주소를 허용하면 네트워크 기준 주소가 아닌 CIDR 주소(예: 11.7.0.2/30)도 입력할 수 있으며, 해당 네트워크 기준 경로(11.7.0.0/30)로 자동 정규화됩니다.";
 "app_information" = "앱 정보";
 "privacy_policy" = "개인정보 처리방침";
 "data_collection_policy" = "데이터 수집 정책";
@@ -145,7 +148,6 @@
 "setup_get_started" = "시작하기";
 "setup_next" = "다음";
 "setup_skip" = "건너뛰기";
-
 
 /*MARK: Restart pop-up*/
 "restart_title" = "재시작";
