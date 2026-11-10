@@ -51,6 +51,8 @@
 "device_ip" = "IP de l'appareil";
 "tunnel_ip" = "IP du tunnel";
 "subnet_mask" = "Masque de sous-réseau";
+"allow_intermediate_addresses" = "Autoriser les adresses intermédiaires" ;
+"allow_intermediate_addresses_desc" = "Lorsque les adresses intermédiaires sont autorisées, les adresses CIDR non basées sur le réseau (par ex. 11.7.0.2/30) sont acceptées et normalisées vers leur route réseau de base (11.7.0.0/30)." ;
 "app_information" = "Informations sur l'App";
 "privacy_policy" = "Politique de confidentialité";
 "data_collection_policy" = "Politique de collecte de données";
@@ -59,7 +61,7 @@
 "language" = "Langue";
 "dropdown_language" = "Langue";
 
-/* MARK: Locales* /
+/* MARK: Locales */
 "english" = "Anglais";
 "spanish" = "Espagnol";
 "italian" = "Italien";
@@ -147,7 +149,7 @@
 "setup_next" = "Suivant";
 "setup_skip" = "Ignorer";
 
-/*MARK: Restart pop-up*/
+/*MARK: Restart pop-up */
 "restart_title" = "Redémarrer";
 "restart_message" = "Pour appliquer les modifications, vous devez redémarrer l'application.";
 "confirmYes" = "Oui";
