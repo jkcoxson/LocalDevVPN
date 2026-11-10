@@ -1,0 +1,155 @@
+/* MARK: Start Screen */
+
+"current_status" = "现状";
+
+"disconnected" = "已中断连接";
+"connecting" = "连接中";
+"connected" = "已连接";
+"disconnecting" = "中断连接中";
+"error" = "错误";
+
+"local_tunnel_active" = "本地隧道已开启";
+"local_tunnel_inactive" = "本地隧道未开启";
+
+"connected_to_ip" = "已连接至 %@";
+"connected_at" = "连接于";
+"ios_might_ask_you_to_allow_the_vpn" = "iOS可能会要求您允许VPN";
+"disconnecting_safely" = "正在安全地中断连接…";
+"open_settings_to_review_details" = "开启设定以查看详细信息";
+"tap_connect_to_create_the_tunnel" = "点击「连接」以建立隧道";
+
+"connection" = "连接";
+"start_or_stop_the_secure_local_tunnel" = "启用或停止安全的本地隧道。";
+
+"connect" = "连接";
+"disconnect" = "断开连接";
+"connecting_ellipsis" = "连接中...";
+"disconnecting_ellipsis" = "断开连接中...";
+"server_address_name" = "LocalDevVPN本地隧道";
+
+"auto-connect_on_launch" = "启动时自动连接";
+"resume_your_last_state_automatically" = "自动恢复上次的状态。";
+
+"session_details" = "会话详情";
+"live_stats_while_the_tunnel_is_connected" = "连接时的实时状态。";
+"local_device_ip" = "本地设备IP";
+
+"local_tunnel_details" = "隧道详情";
+"time_connected" = "已连接时间";
+"status" = "状态";
+"active" = "开启中";
+"network_interface" = "网络接口";
+"local" = "本地";
+"assigned_ip" = "分配的IP";
+
+/* MARK: Settings */
+
+"connection_settings" = "连接设置";
+"auto_connect_on_launch" = "启动时自动连接";
+"connection_logs" = "连接日志";
+"network_configuration" = "网络配置";
+"device_ip" = "设备IP";
+"tunnel_ip" = "隧道IP";
+"subnet_mask" = "子网掩码";
+"app_information" = "应用程序信息";
+"privacy_policy" = "隐私政策";
+"data_collection_policy" = "数据收集政策";
+"app_version" = "应用程序版本";
+"help_and_support" = "帮助与支持";
+"language" = "设置语言";
+"dropdown_language" = "语言";
+
+/*MARK: Locales*/
+"english" = "英文";
+"spanish" = "西班牙文";
+"italian" = "意大利文";
+"polish" = "波兰文";
+"korean" = "韩语";
+"SChinese" = "简体中文";
+"TChinese" = "繁体中文";
+"french" = "法语";
+"japanese" = "日语";
+
+"settings" = "设置";
+"done" = "完成";
+"warning_alert" = "警告";
+"warning_message" = "更改隧道IP设置可能会中断网络连接。仅在完全了解操作时继续。";
+"understand_button" = "我了解";
+
+"data_collection_policy_title" = "数据收集政策";
+"no_data_collection" = "不收集数据";
+"no_data_collection_description" = "LocalDevVPN不会收集使用者数据、流量信息或浏览记录。此应用程序仅建立在设备上的本地网络隧道。";
+"local_processing_only" = "仅在本地处理";
+"local_processing_only_description" = "所有网络流量和设置都在您的设备上处理。数据不会离开设备或传输到互联网。";
+"no_third_party_sharing" = "不与第三方共享";
+"no_third_party_sharing_description" = "由于我们不收集数据，因此也不会与第三方共享。此应用程序中没有分析、追踪或数据收集机制。";
+"why_use_network_permissions" = "为何需要网络权限";
+"why_use_network_permissions_description" = "LocalDevVPN需要网络扩展权限来建立设备上的本地网络接口。这仅用于本地开发与测试。";
+"our_promise" = "我们的承诺";
+"our_promise_description" = "我们重视隐私与透明度。此应用程序专为开发者设计，可在无隐私疑虑下连接本地服务。";
+"data_collection_policy_nav" = "数据收集";
+"logs_nav" = "日志";
+"faq_header" = "常见问题";
+"faq_q1" = "这个应用程序是做什么的？";
+"faq_q1_a1" = "LocalDevVPN建立本地网络接口以供开发与测试使用。它不会通过外部服务器传输流量：所有操作皆在本设备上进行。";
+"faq_common_use_cases" = "常见使用场景包括：";
+"faq_case1" = "• 使用本地服务器进行网页应用测试";
+"faq_case2" = "• 网络功能开发与排错";
+"faq_case3" = "• 访问本地开发环境";
+"faq_case4" = "• 测试需要特定网络设置的应用程序";
+"faq_q2" = "这是传统VPN吗？";
+"faq_q2_a1" = "不，LocalDevVPN并非传统VPN服务。它不会：";
+"faq_q2_point1" = "• 通过外部服务器路由您的网络流量";
+"faq_q2_point2" = "• 提供浏览隐私或匿名访问";
+"faq_q2_point3" = "• 连接到远端VPN服务器";
+"faq_q2_point4" = "• 加盟或路由您的互联网流量";
+"faq_q2_a2" = "LocalDevVPN只建立本地网络接口，协助开发者连接本地服务进行开发与测试。";
+"faq_q3" = "为什么连接会失败？";
+"faq_q3_a1" = "连接失败可能因为系统权限、设置错我或 iOS 限制所致。";
+"faq_troubleshoot_header" = "故障排除步骤：";
+"faq_troubleshoot1" = "• 确认已允许网络扩展权限";
+"faq_troubleshoot2" = "• 尝试重启应用程序";
+"faq_troubleshoot3" = "• 检查IP设置是否正确";
+"faq_troubleshoot4" = "• 问题持续则重启设备";
+"faq_q4" = "这个应用程序适合谁使用？";
+"faq_q4_intro" = "LocalDevVPN主要适用于：";
+"faq_q4_case1" = "• 测试本地网页服务器的开发者";
+"faq_q4_case2" = "• 测试网络功能的应用程序开发者";
+"faq_q4_case3" = "• 在隔离环境中测试应用程序的QA工程师";
+"faq_q4_case4" = "• 需要访问iOS上本地服务的使用者";
+"faq_q4_conclusion" = "此应用程序公开提供，对需要在iOS上测试网络功能的开发者非常有用。";
+"business_model_header" = "商业模式";
+"biz_q1" = "LocalDevVPN是如何运作的？";
+"biz_q1_a1" = "LocalDevVPN是完全免费的应用程序，公开提供给所有人。没有付费功能、订阅或应用程序内购买。";
+"biz_key_points_header" = "我们模式的重点：";
+"biz_point1" = "• 此应用程序不隶属任何公司或团体";
+"biz_point2" = "• 任何人都可以从App Store下载使用";
+"biz_point3" = "• 不需要建立账号";
+"biz_point4" = "• 所有功能对所有使用者皆免费";
+"biz_point5" = "• 此应用程序作为开放工具，供iOS社区使用与维护";
+"app_info_header" = "应用程序信息";
+"requires_ios" = "需iOS 14.0或更新版本";
+"uses_network_extension" = "使用Apple网络扩展API";
+"help_and_support_nav" = "帮助与支持";
+"setup_welcome_title" = "欢迎使用LocalDevVPN";
+"setup_welcome_description" = "简单的本地网络隧道工具，专为开发者设计";
+"setup_welcome_details" = "LocalDevVPN建立本地网络接口，用于开发、测试及访问本地服务。此应用程序不会收集使用者数据，也不会将流量传输到外部服务器。";
+"setup_why_title" = "为什么使用LocalDevVPN？";
+"setup_why_description" = "iOS开发者的最佳选择";
+"setup_why_details" = "• 访问本地网页服务与开发环境\n• 测试需要特定网络设置的应用程序\n• 无需复杂设置即可连接本地网络服务\n• 创建隔离的测试环境";
+"setup_easy_title" = "操作简单";
+"setup_easy_description" = "只需一键即可连接";
+"setup_easy_details" = "LocalDevVPN设计简单明了，只要点击连接按钮即可建立本地隧道并使用预置设定。";
+"setup_privacy_title" = "重视隐私";
+"setup_privacy_description" = "您的数据仅存在设备上";
+"setup_privacy_details" = "LocalDevVPN建立本地隧道，不会将流量传输到外部服务器，所有流量都停留在设备上，确保隐私与安全。资料不会被收集或与第三方共享。";
+"setup_nav" = "设置";
+"setup_get_started" = "开始使用";
+"setup_next" = "下一步";
+"setup_skip" = "跳过";
+
+/*MARK: Restart pop-up*/
+"restart_title" = "重启";
+"restart_message" = "要使变更生效，必须重启应用程序。";
+"confirmYes" = "是";
+"confirmNo" = "不";
