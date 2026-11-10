@@ -9,11 +9,11 @@ on:
 
 jobs:
     build:
-        runs-on: macos-latest
+        runs-on: xcode-27
 
         steps:
             - name: Checkout repository
-              uses: actions/checkout@v4
+              uses: actions/checkout@v7
 
             - name: Install ldid
               run: brew install ldid
@@ -62,7 +62,7 @@ jobs:
                   zip -r ./LocalDevVPN-fakesigned.ipa Payload
 
             - name: Upload IPA Artifact
-              uses: actions/upload-artifact@v4
+              uses: actions/upload-artifact@v7
               with:
                   name: LocalDevVPN-IPA.ipa
                   path: LocalDevVPN-fakesigned.ipa
