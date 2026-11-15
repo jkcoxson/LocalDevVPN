@@ -595,6 +595,31 @@ class TunnelManager: ObservableObject {
         VPNLogger.shared.log("LocalDevVPN tunnel stop initiated")
     }
 
+    /// Stops the tunnel and starts it again once it is down (localdevvpn://restart), through the same
+    /// ShouldStartLocalDevVPNAfterDisconnect path as a configuration change. A tunnel that is not running
+    /// is just started.
+    func restartVPN() {
+        if isSimulator {
+            simulateStopVPN()
+            simulateStartVPN()
+            return
+        }
+
+        guard let manager = vpnManager,
+              manager.connection.status != .disconnected, manager.connection.status != .invalid else {
+            startVPN()
+            return
+        }
+
+        pendingStartAddresses = nil
+        UserDefaults.standard.set(true, forKey: "ShouldStartLocalDevVPNAfterDisconnect")
+        DispatchQueue.main.async { [weak self] in
+            self?.tunnelStatus = .disconnecting
+        }
+        manager.connection.stopVPNTunnel()
+        VPNLogger.shared.log("LocalDevVPN tunnel restart initiated")
+    }
+
     func updateConfigAndRestart(shouldRestart: Bool) {
         if isSimulator { return }
         

@@ -33,6 +33,27 @@ struct LocalDevVPNApp: App {
                     UIApplication.shared.open(callbackURL)
                 }
             }
+        case "restart":
+            // A tunnel can look connected while its extension is gone (iOS ended it under memory pressure):
+            // "enable" then does nothing. Stop it and start it again; with ?scheme=, go back to the caller
+            // once the tunnel is up again (at most 10 s).
+            let scheme = URLComponents(url: url, resolvingAgainstBaseURL: false)?
+                .queryItems?.first(where: { $0.name == "scheme" })?.value
+            Task { @MainActor in
+                _ = try? await tunnelManager.isVPNActive() // loads the manager on a cold launch
+                tunnelManager.restartVPN()
+                guard let scheme, let callbackURL = URL(string: "\(scheme)://") else { return }
+                var sawDown = false
+                for _ in 0..<40 {
+                    try? await Task.sleep(nanoseconds: 250_000_000)
+                    if tunnelManager.tunnelStatus != .connected {
+                        sawDown = true
+                    } else if sawDown {
+                        break
+                    }
+                }
+                _ = await UIApplication.shared.open(callbackURL)
+            }
         case "disable":
             tunnelManager.stopVPN()
             if let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
